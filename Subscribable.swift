@@ -10,14 +10,34 @@ import UIKit
 import JGProgressHUD
 
 
+
+class TextTranslatorVC: UIViewController {
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(true)
+       fetchDataForSubscription()
+    }
+}
+
+extension TextTranslatorVC : Subscribable {
+    var subscribeViewTag: Int {
+        1000
+    }
+    
+    var languageView: LanguageSwitchView {
+        self.languageSwitchView
+    }
+    
+    var translatorView: TranslatorView {
+        self.translatorInputView
+    }
+}
+
 protocol Subscribable where Self: UIViewController {
     func fetchDataForSubscription()
-    func addSubscribeView()
     var subscribeViewTag: Int { get }
     var languageView: LanguageSwitchView { get}
     var translatorView: TranslatorView { get}
-    func updateTranslatorInputView(showSubscription: Bool)
-    func removeSubscribeView()
+
 }
 
 extension Subscribable {
@@ -34,7 +54,7 @@ extension Subscribable {
         })
     }
     
-    func addSubscribeView() {
+  private func addSubscribeView() {
         if self.view.viewWithTag(subscribeViewTag) != nil {
             return
         }
@@ -59,7 +79,7 @@ extension Subscribable {
         }
     }
     
-    func updateTranslatorInputView(showSubscription: Bool) {
+   private func updateTranslatorInputView(showSubscription: Bool) {
         if showSubscription {
             translatorView.speakerButton.alpha = 0.3
             translatorView.languageLabel.alpha = 0.3
@@ -71,7 +91,7 @@ extension Subscribable {
         }
     }
     
-    func removeSubscribeView() {
+   private func removeSubscribeView() {
         if let view = self.view.viewWithTag(subscribeViewTag) {
             view.removeFromSuperview()
         }
